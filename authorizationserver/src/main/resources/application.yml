@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: authentication-service
+  cloud:
+    discovery:
+      enabled: true
+  profiles:
+    active: {ACTIVE_PROFILE : dev}
+  database:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+    username: {POSTGRES_USERNAME}
+    password: {POSTGRES_PASSWORD}
+    hikari:
+      conneetion-test-query: SELECT 1
+  jpa:
+    database: POSTGRESQL
+    open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQL82Dialect
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: ${POSTGRES_SCHEMA}
+        dialect: org.hibernate.dialect.PostgreSQL82Dialect
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+#      provide username and password for eureka server
+      defaultZone: http://${USER_NAME}:${PASSWORD}@localhost:5002/eureka/
+
+ui:
+  app:
+    url: {UI_APP_URL}

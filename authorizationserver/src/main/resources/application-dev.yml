@@ -1,0 +1,15 @@
+ACTIVE_PROFILE: dev
+
+PRIVATE_KEY: "private.key"
+PUBLIC_KEY: "public.key"
+POSTGRES_USERNAME: user
+POSTGRES_PASSWORD: password
+POSTGRES_HOST: localhost
+POSTGRES_PORT: 5432
+POSTGRES_DATABASE: localdb
+
+USER_NAME: admin
+PASSWORD: letmein
+
+SERVER_PORT: 8080
+UI_APP_URL: "http://localhost:3000"
