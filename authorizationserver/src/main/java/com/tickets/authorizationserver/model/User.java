@@ -12,4 +12,6 @@ import lombok.Setter;
 public class User {
     private String userUuid;
     private boolean mfa;
+    private String email;
+    private String qrCodeSecret;
 }
