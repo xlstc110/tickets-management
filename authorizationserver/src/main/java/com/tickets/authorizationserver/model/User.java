@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class User {
     private String userUuid;
+    private boolean mfa;
 }

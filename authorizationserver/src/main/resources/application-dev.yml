@@ -1,5 +1,6 @@
 ACTIVE_PROFILE: dev
-
+# in production, should use a secure way to store keys and passwords,
+# such as environment variables or a secrets manager(AWS Secrets Manager).
 PRIVATE_KEY: "private.key"
 PUBLIC_KEY: "public.key"
 POSTGRES_USERNAME: user

@@ -5,11 +5,11 @@ spring:
     discovery:
       enabled: true
   profiles:
-    active: {ACTIVE_PROFILE : dev}
+    active: ${ACTIVE_PROFILE:dev}
   database:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
-    username: {POSTGRES_USERNAME}
-    password: {POSTGRES_PASSWORD}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
     hikari:
       conneetion-test-query: SELECT 1
   jpa:
@@ -36,4 +36,10 @@ eureka:
 
 ui:
   app:
-    url: {UI_APP_URL}
+    url: ${UI_APP_URL}
+
+keys:
+  private:
+    key: ${PRIVATE_KEY}
+  public:
+    key: ${PUBLIC_KEY}
