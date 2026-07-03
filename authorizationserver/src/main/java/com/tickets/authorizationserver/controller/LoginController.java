@@ -1,8 +1,11 @@
 package com.tickets.authorizationserver.controller;
 
+import com.tickets.authorizationserver.exception.ApiException;
 import com.tickets.authorizationserver.model.User;
 import com.tickets.authorizationserver.security.MfaAuthentication;
 import com.tickets.authorizationserver.service.UserService;
+import com.tickets.authorizationserver.service.implementation.UserServiceImpl;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -22,10 +26,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
+import static com.tickets.authorizationserver.utils.RequestUtils.getMessage;
 import static com.tickets.authorizationserver.utils.UserUtils.getUser;
 
 // Not RestController since it is serving HTML file
@@ -36,14 +42,39 @@ public class LoginController {
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final UserService userService;
 
-    public LoginController() {
+    public LoginController(UserService userService) {
         this.authenticationSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
         this.authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler("/mfa?error");
+        this.userService = userService;
     }
 
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response,
+                         Model model,
+                         Exception  exception) {
+
+        return "logout";
+    }
+
+    @RequestMapping("/logout")
+    public String error(HttpServletRequest request,
+                        HttpServletResponse response,
+                        Model model,
+                        Exception  exception) {
+        var errorException = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+        if(errorException instanceof ApiException || errorException instanceof BadCredentialsException) {
+            // Set the exception in the session so that it can be accessed in the login page
+            request.getSession().setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, errorException);
+            return "login";
+        }
+        model.addAttribute("message", getMessage(request));
+        return "error";
     }
 
     @GetMapping("/mfa")
