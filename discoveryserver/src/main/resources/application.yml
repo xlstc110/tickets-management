@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: discovery-service
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
+  database:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+    hikari:
+      conneetion-test-query: SELECT 1
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+#      provide username and password for eureka server
+      defaultZone: http://${USER_NAME}:${PASSWORD}@${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    enable-self-preservation: false
+    renewal-percentage-threshold: 0.33
+    wait-time-in-ms-when-sync-empty: 0
+    peer-node-read-timeout-ms: 30000
+
+server:
+  port: ${SERVER_PORT}

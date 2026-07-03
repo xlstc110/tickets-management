@@ -1,0 +1,33 @@
+package com.tickets.discoveryservice.utils;
+
+import com.tickets.discoveryservice.domain.Response;
+import jakarta.servlet.http.HttpServletRequest;
+import nl.basjes.parse.useragent.UserAgent;
+
+public class UserAgentUtils {
+    private static final String USER_AGENT_HEADER = "user-agent";
+    private static final String X_FORWARDED_FOR_HEADER = "X-Forwarded-For";
+
+    public static String getDevice(HttpServletRequest request) {
+        var uaa = Response.getInstance();
+        var agent = uaa.parse(request.getHeader(USER_AGENT_HEADER));
+        return agent.getValue(UserAgent.DEVICE_NAME);
+    }
+
+    public static String getClient(HttpServletRequest request) {
+        var uaa = Response.getInstance();
+        var agent = uaa.parse(request.getHeader(USER_AGENT_HEADER));
+        return agent.getValue(UserAgent.AGENT_NAME);
+    }
+
+    public static String getIdAddress(HttpServletRequest request) {
+        var ipAddress = "Unknown IP";
+        if (request != null) {
+            ipAddress = request.getHeader(X_FORWARDED_FOR_HEADER);
+            if(ipAddress == null || ipAddress.isEmpty()) {
+                ipAddress = request.getRemoteAddr();
+            }
+        }
+        return ipAddress;
+    }
+}

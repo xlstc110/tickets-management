@@ -1,0 +1,15 @@
+ACTIVE_PROFILE: dev
+# in production, should use a secure way to store keys and passwords,
+# such as environment variables or a secrets manager(AWS Secrets Manager).
+POSTGRES_USERNAME: user
+POSTGRES_PASSWORD: password
+POSTGRES_HOST: localhost
+POSTGRES_PORT: 5432
+POSTGRES_DATABASE: localdb
+
+USER_NAME: admin
+PASSWORD: letmein
+ROLES: EUREKA_CLIENT
+
+SERVER_PORT: 5002
+UI_APP_URL: "http://localhost:3000"
