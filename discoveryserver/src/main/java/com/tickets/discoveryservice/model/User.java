@@ -2,6 +2,8 @@ package com.tickets.discoveryservice.model;
 
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -32,4 +34,9 @@ public class User implements UserDetails {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
 }

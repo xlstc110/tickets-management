@@ -3,12 +3,12 @@ spring:
     name: discovery-service
   profiles:
     active: ${ACTIVE_PROFILE:dev}
-  database:
+  datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
     hikari:
-      conneetion-test-query: SELECT 1
+      connection-test-query: SELECT 1
 
 eureka:
   instance:
