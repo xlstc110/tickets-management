@@ -1,0 +1,8 @@
+ACTIVE_PROFILE: dev
+
+USER_NAME: admin
+PASSWORD: letmein
+ROLES: EUREKA_CLIENT
+
+SERVER_PORT: 8000
+JWKS_URI: http://localhost:8080/oauth2/jwks
