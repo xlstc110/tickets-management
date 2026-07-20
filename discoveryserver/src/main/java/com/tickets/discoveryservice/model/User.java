@@ -1,6 +1,7 @@
 package com.tickets.discoveryservice.model;
 
 import lombok.*;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
@@ -35,8 +36,12 @@ public class User implements UserDetails {
     private boolean credentialsNonExpired;
     private boolean enabled;
 
+    public String getAuthoritiesValue() {
+        return authorities;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
     }
 }
