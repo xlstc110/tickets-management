@@ -2,7 +2,7 @@ ACTIVE_PROFILE: test
 # in production, should use a secure way to store keys and passwords,
 # such as environment variables or a secrets manager(AWS Secrets Manager).
 POSTGRES_USERNAME: user
-POSTGRES_PASSWORD: password
+POSTGRES_PASSWORD: letmein
 POSTGRES_HOST: localhost
 POSTGRES_PORT: 5432
 POSTGRES_DATABASE: localdb
