@@ -1,0 +1,42 @@
+services:
+  postgresdb:
+    container_name: postgrecontainer
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SERVICE_TAGS: dev1
+      SERVICE_NAME: postgresservice
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresvolume:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  pgadmin:
+    container_name: pgadmincontainer
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_DEFAULT_ADDRESS: 6000
+      PGADMIN_LISTEN_PORT: 6000
+    depends_on:
+      - postgresdb
+    expose:
+      - 6000
+    ports:
+      - 7000:6000
+    volumes:
+      - pgadminvolume:/var/lib/pgadmin
+
+volumes:
+  postgresvolume:
+  pgadminvolume:
+
+# docker compose -f ./compose-postgres.yml up -d
+# psql -h 192.168.1.216 -p 5432 -d <databasename> -U <user> -W
+# docker exec -it <container_name or id> psql -U <user> -d <database name> name
