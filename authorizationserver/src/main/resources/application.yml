@@ -6,16 +6,17 @@ spring:
       enabled: true
   profiles:
     active: ${ACTIVE_PROFILE:dev}
-  database:
+  datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
     hikari:
-      conneetion-test-query: SELECT 1
+      connection-test-query: SELECT 1
   jpa:
     database: POSTGRESQL
     open-in-view: false
-    database-platform: org.hibernate.dialect.PostgreSQL82Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: false
     show-sql: true
     hibernate:
@@ -24,7 +25,7 @@ spring:
       hibernate:
         format_sql: true
         default_schema: ${POSTGRES_SCHEMA}
-        dialect: org.hibernate.dialect.PostgreSQL82Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 eureka:
   instance:

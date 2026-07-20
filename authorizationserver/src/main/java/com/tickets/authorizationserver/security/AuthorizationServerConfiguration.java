@@ -71,31 +71,35 @@ public class AuthorizationServerConfiguration {
      */
     @Bean
     @Order(1)
-    public SecurityFilterChain authorizationServerConfig(HttpSecurity http, RegisteredClientRepository registeredClientRepository) throws Exception {
-        // Enable CORS for authorization endpoints (source provided by corsConfigurationSource bean)
-        http.cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()));
+    public SecurityFilterChain authorizationServerConfig(
+            HttpSecurity http,
+            RegisteredClientRepository registeredClientRepository,
+            OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator)
+            throws Exception {
 
-        // Build the authorization server configuration. This registers the endpoints (/oauth2/authorize, /oauth2/token, etc.)
-        var authorizationConfig = OAuth2AuthorizationServerConfigurer
-                .authorizationServer()
-                // tokenGenerator is injected here in a real app. Left null in this example because
-                // a custom generator is created and wired via a separate bean (oAuth2TokenGenerator).
-                .tokenGenerator(oAuth2TokenGenerator())
-                // client authentication customization. Replace nulls with concrete converters/providers
-                // when enabling advanced authentication methods.
-                .clientAuthentication(authentication -> {
-                    // The client authentication converter is responsible for converting the incoming request into an Authentication object.
-                    authentication.authenticationConverter(new ClientRefreshTokenAuthenticationConverter());
-                    authentication.authenticationProvider(new ClientAuthenticationProvider(registeredClientRepository));
-                })
-                // Enable OpenID Connect support with default settings
-                .oidc(Customizer.withDefaults());
+        var authorizationConfig =
+                OAuth2AuthorizationServerConfigurer.authorizationServer();
 
-        // Apply the authorization server config to the security matcher for the endpoints and set exception handling
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         http.securityMatcher(authorizationConfig.getEndpointsMatcher())
-                .with(authorizationConfig, Customizer.withDefaults())
-                .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied")
-                        .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),
+                .with(authorizationConfig, authorizationServer ->
+                        authorizationServer
+                                .tokenGenerator(tokenGenerator)
+                                .clientAuthentication(authentication -> {
+                                    authentication.authenticationConverter(
+                                            new ClientRefreshTokenAuthenticationConverter());
+
+                                    authentication.authenticationProvider(
+                                            new ClientAuthenticationProvider(
+                                                    registeredClientRepository));
+                                })
+                                .oidc(Customizer.withDefaults())
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/access-denied")
+                        .defaultAuthenticationEntryPointFor(
+                                new LoginUrlAuthenticationEntryPoint("/login"),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)));
 
         return http.build();

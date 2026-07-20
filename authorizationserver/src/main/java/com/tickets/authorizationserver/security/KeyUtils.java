@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.tickets.authorizationserver.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.security.*;
 import java.io.File;
@@ -19,6 +20,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.UUID;
 
 @Slf4j
+@Component
 public class KeyUtils {
     private static final String RSA = "RSA";
 
@@ -26,10 +28,10 @@ public class KeyUtils {
     // If is dev profile, will generate local key and use it to generator token
     private String activeProfile;
 
-    @Value("${keys.private}")
+    @Value("${keys.private.key}")
     private String privateKey;
 
-    @Value("${keys.public}")
+    @Value("${keys.public.key}")
     private String publicKey;
 
     public RSAKey getRSAKeyPair() {
